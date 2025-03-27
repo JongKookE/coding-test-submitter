@@ -1,0 +1,29 @@
+{
+    "name": "Coding Test Submitter",
+    "description": "코딩 테스트 사이트에 제출 시 양식에 맞추어 코드 포맷 변경",
+    "version": "1.0",
+    "manifest_version": 3,
+    "action": {
+      "default_icon": "assets/submitter.png"
+    },
+    
+    "permissions": [
+    "clipboardWrite",
+    "clipboardRead",
+    "activeTab"
+  ],
+    "content_scripts": [
+        {
+          "js": [ "scripts/util.js", "scripts/baekjoon.js"],
+          "matches": ["https://www.acmicpc.net/*"]
+        },
+        {
+          "js": ["scripts/util.js", "scripts/programmers.js"],
+          "matches": ["https://school.programmers.co.kr/learn/courses/30/lessons/*"]
+        }
+
+    ]    
+} 
+
+
+  
