@@ -5,20 +5,20 @@
     "manifest_version": 3,
     "action": {
       "default_icon": "assets/submitter.png"
-    },
-    
-    "permissions": [
-    "clipboardWrite",
-    "clipboardRead",
-    "activeTab"
-  ],
+    },    
+    "permissions": 
+      [
+        "clipboardWrite",
+        "clipboardRead",
+        "activeTab"
+      ],
     "content_scripts": [
         {
-          "js": [ "scripts/util.js", "scripts/baekjoon.js"],
+          "js": ["scripts/baekjoon.js"],
           "matches": ["https://www.acmicpc.net/*"]
         },
         {
-          "js": ["scripts/util.js", "scripts/programmers.js"],
+          "js": ["scripts/programmers.js"],
           "matches": ["https://school.programmers.co.kr/learn/courses/30/lessons/*"]
         }
 
