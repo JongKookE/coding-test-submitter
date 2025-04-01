@@ -19,24 +19,33 @@ function toProgrammers(tokens) {
 
   const removeStartIndex = tokens.indexOf("public");
   const removeEndIndex = removeClassBlockEndIndex(tokens);
-
-  tokens.splice(removeStartIndex, removeEndIndex - removeStartIndex + 4).join("");
+  tokens.splice(removeStartIndex, removeEndIndex - removeStartIndex + 4);
   tokens.splice(tokens.lastIndexOf("}"));
   return tokens.join("");
 }
 
 function removeClassBlockEndIndex(tokens) {
   let start = tokens.indexOf("void") + 6;
-
   const stack = [];
 
   for (var i = start; i < tokens.length; i++) {
     const token = tokens[i];
-    if (token.includes("{")) stack.push("{");
-    else if (token.includes("}")) stack.pop();
+    if (token.includes("{")) for (var j = 0; j < countTokenInStr(token, token); j++) stack.push("{");
+    else if (token.includes("}")) for (var j = 0; j < countTokenInStr(token, token); j++) stack.pop();
+
     if (stack.length === 0) return i;
   }
 }
+
+const countTokenInStr = (token, block) => {
+  let count = 0;
+  for (let i = 0; i < token.length; i++) {
+    if (token[i] !== block) continue;
+    count++;
+  }
+  return count;
+  
+};
 
 const getStartIndex = (tokens) => {
   if (tokens[0] === "package") return 4;
