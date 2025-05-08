@@ -13,24 +13,18 @@ document.addEventListener(
 );
 
 function toProgrammers(tokens) {
-  let startPoint = getStartIndex(tokens);
-  tokens.splice(0, startPoint);
-
-  const removeStartIndex = tokens.indexOf("public");
-  const removeEndIndex = removeClassBlockEndIndex(tokens);
-  tokens.splice(removeStartIndex, removeEndIndex - removeStartIndex + 4);
-  tokens.splice(tokens.lastIndexOf("}"));
-  return tokens.join("");
+  const language = checkLanguage()
+  if(language === 'Java') return makeJavaFormat(tokens)
+  else if (language === 'Kotlin') return makeKotlinFormat(tokens);
 }
 
-function removeClassBlockEndIndex(tokens, removeWord, nextRemoveCount) {
-  let start = tokens.indexOf(removeWord) + nextRemoveCount;
+function removeClassBlockEndIndex(tokens, start) {
   const stack = [];
 
   for (var i = start; i < tokens.length; i++) {
     const token = tokens[i];
-    if (token.includes("{")) for (var j = 0; j < countTokenInStr(token, token); j++) stack.push("{");
-    else if (token.includes("}")) for (var j = 0; j < countTokenInStr(token, token); j++) stack.pop();
+    if (token.includes("{")) for (var j = 0; j < countTokenInStr(token, '{'); j++) stack.push("{");
+    else if (token.includes("}")) for (var j = 0; j < countTokenInStr(token, '}'); j++) stack.pop();
 
     if (stack.length === 0) return i;
   }
@@ -60,4 +54,34 @@ const textToken = (text) => {
 
 const checkLanguage = () => {
   return document.querySelector('#tour7').querySelector('.btn').innerText.trim()
+}
+
+const makeJavaFormat = (tokens) => {
+  let startPoint = getStartIndex(tokens);
+  tokens.splice(0, startPoint);
+  
+
+  let start = tokens.indexOf('void') + 6;
+
+  const removeStartIndex = tokens.indexOf("public");
+  const removeEndIndex = removeClassBlockEndIndex(tokens, start);
+  tokens.splice(removeStartIndex, removeEndIndex - removeStartIndex + 4);
+  tokens.splice(tokens.lastIndexOf("}"));
+  return tokens.join("");
+}
+
+const makeKotlinFormat = (tokens) => {
+  console.log('Im Kotlin')
+  let startPoint = getStartIndex(tokens);
+  tokens.splice(0, startPoint);
+  tokens[0] = 0
+
+  const nextClassIndex = tokens.indexOf('class')
+  tokens.splice(0, nextClassIndex)
+  
+  const start = tokens.indexOf('{')
+  const end = removeClassBlockEndIndex(tokens, start)
+  const slicedToken = tokens.slice(0, end+4)
+  console.log(slicedToken)
+  return slicedToken.join("")
 }
