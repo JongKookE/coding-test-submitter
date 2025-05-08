@@ -6,7 +6,6 @@ document.addEventListener(
     const pastedData = clipboardData.getData("text");
 
     const formattedData = toProgrammers(textToken(pastedData));
-
     document.execCommand("insertText", false, formattedData);
     // paste 이벤트는 cancleable하지 않기 때문에 cancelable 파라미터를 true로 지정해줘야함
   },
@@ -24,8 +23,8 @@ function toProgrammers(tokens) {
   return tokens.join("");
 }
 
-function removeClassBlockEndIndex(tokens) {
-  let start = tokens.indexOf("void") + 6;
+function removeClassBlockEndIndex(tokens, removeWord, nextRemoveCount) {
+  let start = tokens.indexOf(removeWord) + nextRemoveCount;
   const stack = [];
 
   for (var i = start; i < tokens.length; i++) {
@@ -58,3 +57,7 @@ const textToken = (text) => {
   textArray = text.split(/(\s+)/);
   return textArray;
 };
+
+const checkLanguage = () => {
+  return document.querySelector('#tour7').querySelector('.btn').innerText.trim()
+}
