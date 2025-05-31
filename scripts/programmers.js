@@ -12,6 +12,7 @@ document.addEventListener(
   true
 );
 
+
 function toProgrammers(tokens) {
   const language = checkLanguage()
   if(language === 'Java') return makeJavaFormat(tokens)
@@ -19,26 +20,17 @@ function toProgrammers(tokens) {
 }
 
 function removeClassBlockEndIndex(tokens, start) {
-  const stack = [];
-
-  for (var i = start; i < tokens.length; i++) {
+  let count = 1;  // 시작 중괄호는 이미 있으므로 1로 시작
+  
+  for (let i = start; i < tokens.length; i++) {
     const token = tokens[i];
-    if (token.includes("{")) for (var j = 0; j < countTokenInStr(token, '{'); j++) stack.push("{");
-    else if (token.includes("}")) for (var j = 0; j < countTokenInStr(token, '}'); j++) stack.pop();
-
-    if (stack.length === 0) return i;
+    // 정규표현식을 통해 중괄호를 가져오면서 g 플래그를 통해 일치하는 부분을 배열로 전환
+    count += (token.match(/{/g) || []).length;
+    count -= (token.match(/}/g) || []).length;
+    
+    if (count === 0) return i;
   }
 }
-
-const countTokenInStr = (token, block) => {
-  let count = 0;
-  for (let i = 0; i < token.length; i++) {
-    if (token[i] !== block) continue;
-    count++;
-  }
-  return count;
-  
-};
 
 const getStartIndex = (tokens) => {
   if (tokens[0] === "package") return 4;
@@ -60,7 +52,6 @@ const makeJavaFormat = (tokens) => {
   let startPoint = getStartIndex(tokens);
   tokens.splice(0, startPoint);
   
-
   let start = tokens.indexOf('void') + 6;
 
   const removeStartIndex = tokens.indexOf("public");
@@ -71,7 +62,6 @@ const makeJavaFormat = (tokens) => {
 }
 
 const makeKotlinFormat = (tokens) => {
-  console.log('Im Kotlin')
   let startPoint = getStartIndex(tokens);
   tokens.splice(0, startPoint);
   tokens[0] = 0
@@ -82,6 +72,5 @@ const makeKotlinFormat = (tokens) => {
   const start = tokens.indexOf('{')
   const end = removeClassBlockEndIndex(tokens, start)
   const slicedToken = tokens.slice(0, end+4)
-  console.log(slicedToken)
   return slicedToken.join("")
 }
