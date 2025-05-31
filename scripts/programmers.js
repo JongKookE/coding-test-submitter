@@ -4,14 +4,12 @@ document.addEventListener(
     e.preventDefault();
     const clipboardData = e.clipboardData || window.clipboardData;
     const pastedData = clipboardData.getData("text");
-
     const formattedData = toProgrammers(textToken(pastedData));
     document.execCommand("insertText", false, formattedData);
     // paste 이벤트는 cancleable하지 않기 때문에 cancelable 파라미터를 true로 지정해줘야함
   },
   true
 );
-
 
 function toProgrammers(tokens) {
   const language = checkLanguage()
@@ -24,7 +22,6 @@ function removeClassBlockEndIndex(tokens, start) {
   
   for (let i = start; i < tokens.length; i++) {
     const token = tokens[i];
-    // 정규표현식을 통해 중괄호를 가져오면서 g 플래그를 통해 일치하는 부분을 배열로 전환
     count += (token.match(/{/g) || []).length;
     count -= (token.match(/}/g) || []).length;
     
@@ -58,7 +55,18 @@ const makeJavaFormat = (tokens) => {
   const removeEndIndex = removeClassBlockEndIndex(tokens, start);
   tokens.splice(removeStartIndex, removeEndIndex - removeStartIndex + 4);
   tokens.splice(tokens.lastIndexOf("}"));
-  return tokens.join("");
+
+  // 들여쓰기 처리
+  const result = tokens.join("").split("\n");
+  const formattedResult = result.map(line => {
+    // 라인 시작 부분의 공백 개수 확인
+    const leadingSpaces = line.match(/^\s*/)[0].length;
+    // 4칸 이상의 공백이 있다면 4칸 제거
+    if (leadingSpaces >= 4) return line.slice(4);
+    return line;
+  });
+
+  return formattedResult.join("\n");
 }
 
 const makeKotlinFormat = (tokens) => {
