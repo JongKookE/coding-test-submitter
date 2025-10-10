@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="coding-test-submitter">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/coding-test-submitter.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

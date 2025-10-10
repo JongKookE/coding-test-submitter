@@ -4,17 +4,19 @@
     "version": "1.0",
     "manifest_version": 3,
     "action": {
-      "default_icon": "assets/submitter.png"
+      "default_icon": "./assets/submitter.png",
+      "default_popup": "./popup/index.html"
     },    
     "permissions": 
       [
         "clipboardWrite",
         "clipboardRead",
-        "activeTab"
+        "activeTab",
+        "downloads"
       ],
     "content_scripts": [
         {
-          "js": ["scripts/baekjoon.js"],
+          "js": ["./scripts/baekjoon.js"],
           "matches": ["https://www.acmicpc.net/*"]
         },
         {
