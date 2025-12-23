@@ -5,15 +5,15 @@ document.getElementById('image-text-button').addEventListener('click', async () 
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
     console.log(tab.title)
     if(tab.url.includes("acmicpc")){
-        const className = "BOJ_" + tab.title.replace(/^(\d+)[^\w\s]+\s*(.*)/, '$1\_$2').replace(/ /g, '_');
-        const filename = className +  ".java";
-        downloadJavaFile(className, makeBaekjoonFormat(filename))
+        const classname = "BOJ_" + tab.title.replace(/^(\d+)[^\w\s]+\s*(.*)/, '$1\_$2').replace(/ /g, '_');
+        const filename = classname +  ".java";
+        downloadJavaFile(filename, makeBaekjoonFormat(classname))
     }
     else if(tab.url.includes("programmers")){
-        const className = "PRO_" + tab.title.replace(/^(\d+)[^\w\s]+\s*(.*)/, '$1\_$2').replace(/ /g, '_');
-        const filename = className + ".java"
+        const classname = "PRO_" + tab.title.replace(/^(\d+)[^\w\s]+\s*(.*)/, '$1\_$2').replace(/ /g, '_');
+        const filename = classname + ".java"
         console.log(filename)
-        downloadJavaFile(className, makeProFormat(filename))
+        downloadJavaFile(filename, makeProFormat(classname))
     }
 });
 
@@ -35,27 +35,27 @@ const downloadJavaFile = (filename, format) => {
     });
 }
 
-const makeBaekjoonFormat = (filename) => {
+const makeBaekjoonFormat = (classname) => {
     return `
 import java.io.*;
 import java.util.*;
 
-public class ${filename} {
+public class ${classname} {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         // StringTokenizer st = new StringTokenizer(br.readLine());
         // TODO: logic
     }
-};
+}
 `
 }
 
-const makeProFormat = (filename) => {
+const makeProFormat = (classname) => {
     return `
 import java.io.*;
 import java.util.*;
 
-public class ${filename} {
+public class ${classname} {
     public static void main(String[] args) {
         Solution solution = new Solution();
 
