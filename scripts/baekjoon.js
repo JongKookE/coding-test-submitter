@@ -1,33 +1,45 @@
 document.addEventListener(
   "paste",
-  (e) => {
-    e.preventDefault();
-    const clipboardData = e.clipboardData || window.clipboardData;
-    const pastedData = clipboardData.getData("text");
+  (event) => {
+    const clipboardData = event.clipboardData || window.clipboardData;
+    const pastedData = clipboardData?.getData("text");
 
-    const formattedData = toBaekjoon(textToken(pastedData));
-    document.execCommand("insertText", false, formattedData);
-    // paste 이벤트는 cancleable하지 않기 때문에 cancelable 파라미터를 true로 지정해줘야함
+    if (!pastedData) return;
+
+    const formattedData = toBaekjoon(pastedData);
+    if (!formattedData || formattedData === pastedData) return;
+
+    event.preventDefault();
+    insertText(formattedData);
   },
   true
 );
 
-const toBaekjoon = (tokens) => {
-  let startPoint = getStartIndex(tokens);
-  let classNameIndex = tokens.indexOf("public") + 4;
+const toBaekjoon = (text) => {
+  const withoutPackage = text.replace(/^\s*package\s+[\w.]+\s*;\s*\n?/m, "");
+  const renamedClass = withoutPackage.replace(
+    /\bpublic\s+class\s+[^\s{]+/u,
+    "public class Main"
+  );
 
-  tokens[classNameIndex] = "Main";
-  return tokens.slice(startPoint).join("");
+  if (renamedClass !== withoutPackage) return renamedClass;
+
+  return withoutPackage.replace(
+    /\bclass\s+[^\s{]+/u,
+    "class Main"
+  );
 };
 
-const getStartIndex = (tokens) => {
-  if (tokens[0] === "package") return 4;
-  return 0;
-};
+const insertText = (text) => {
+  if (document.queryCommandSupported?.("insertText")) {
+    document.execCommand("insertText", false, text);
+    return;
+  }
 
-const textToken = (text) => {
-  // 공백, 줄바꿈, 탭을 기준으로 분리하는 정규표현식
-  // ()을 통해서 분리되는 구분자도 배열에 포함시킴
-  textArray = text.split(/(\s+)/);
-  return textArray;
+  const selection = window.getSelection();
+  if (!selection?.rangeCount) return;
+
+  selection.deleteFromDocument();
+  selection.getRangeAt(0).insertNode(document.createTextNode(text));
+  selection.collapseToEnd();
 };
