@@ -1,7 +1,8 @@
-import { makeBaekjoonClassName, makeProgrammersClassName } from "./classNames.js";
 import { downloadJavaFile } from "./download.js";
-import { makeBaekjoonFormat, makeProgrammersFormat } from "./templates.js";
+import { baekjoonSite } from "./sites/baekjoon.js";
+import { programmersSite } from "./sites/programmers.js";
 
+const supportedSites = [baekjoonSite, programmersSite];
 const popupButton = document.getElementById("image-text-button");
 
 popupButton.addEventListener("click", async () => {
@@ -22,21 +23,6 @@ popupButton.addEventListener("click", async () => {
 });
 
 const resolveDownloadTarget = (url, title) => {
-    if (url.includes("acmicpc.net")) {
-        const className = makeBaekjoonClassName(url, title);
-        return {
-            className,
-            content: makeBaekjoonFormat(className),
-        };
-    }
-
-    if (url.includes("programmers.co.kr")) {
-        const className = makeProgrammersClassName(url, title);
-        return {
-            className,
-            content: makeProgrammersFormat(className),
-        };
-    }
-
-    return null;
+    const site = supportedSites.find((site) => site.matches(url));
+    return site ? site.resolve(url, title) : null;
 };

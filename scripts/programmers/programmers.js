@@ -51,9 +51,11 @@ const makeJavaFormat = (data) => {
   return [imports, solutionClass].filter(Boolean).join("\n\n").trim();
 };
 
+// package 라인은 코드 제출에 필요가 없으니 제거
 const deletePackageLine = (data) => data.replace(/^package\s+.*?;\s*\n?/gm, "");
 
 const extractSolutionClass = (data) => {
+  // public class Solution / static class Solution 등 여러 선언 형태를 모두 허용
   const classMatch = data.match(/\b(?:public\s+)?(?:static\s+)?class\s+Solution\b/);
   if (!classMatch || classMatch.index == null) return null;
 
@@ -66,6 +68,7 @@ const extractSolutionClass = (data) => {
 
   return data
     .slice(classStart, classEnd + 1)
+    // 접근 제어자 또는 static을 제거한 class Solution 선언으로 변경
     .replace(
       /\bpublic\s+static\s+class\s+Solution\b|\bpublic\s+class\s+Solution\b|\bstatic\s+class\s+Solution\b/,
       "class Solution"
@@ -74,6 +77,8 @@ const extractSolutionClass = (data) => {
 };
 
 const pickupImportsLine = (data) => {
+  // gm 플래그:
+  // g는 전체 검색, m은 여러 줄 텍스트에서 줄 단위 ^ $를 쓰기 위한 옵션입니다.
   const importMatches = data.match(/^import\s+.*?;\s*$/gm) || [];
   return importMatches.join("\n");
 };
