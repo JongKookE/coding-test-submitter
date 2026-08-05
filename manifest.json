@@ -16,8 +16,10 @@
       ],
     "content_scripts": [
         {
-          "js": ["./scripts/baekjoon/baekjoon.js"],
-          "matches": ["https://www.acmicpc.net/*"]
+          "js": ["./scripts/jungol/jungol.js"],
+          "matches": ["https://jungol.co.kr/problem/*"],
+          "world": "MAIN",
+          "run_at": "document_idle"
         },
         {
           "js": ["./scripts/programmers/programmers.js"],

@@ -1,8 +1,9 @@
 import { downloadJavaFile } from "./download.js";
 import { baekjoonSite } from "./sites/baekjoon.js";
 import { programmersSite } from "./sites/programmers.js";
+import { jungolSite } from "./sites/jungol.js";
 
-const supportedSites = [baekjoonSite, programmersSite];
+const supportedSites = [baekjoonSite, programmersSite, jungolSite];
 const popupButton = document.getElementById("image-text-button");
 
 popupButton.addEventListener("click", async () => {
